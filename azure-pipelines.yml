@@ -13,12 +13,11 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  solutionName: 'DeployOnPremDemo'
-  projectName: 'DeployOnPremDemo'
-  schemaDataDirectory: '$(Build.SourcesDirectory)\$(solutionName)\$(projectName)\data'
+  projectDirectory: 'DeployOnPremDemo'
+  schemaDataDirectory: '$(Build.SourcesDirectory)\$(projectDirectory)\data'
   publishDirectory: '$(Build.ArtifactStagingDirectory)\_Publish'
   zipDirectory: '$(Build.ArtifactStagingDirectory)\_Zip'
-  triggerDeployScript: $(Build.SourcesDirectory)\$(solutionName)\$(projectName)\TriggerDeploy.ps1
+  triggerDeployScript: $(Build.SourcesDirectory)\$(projectDirectory)\TriggerDeploy.ps1
 
 steps:
 
