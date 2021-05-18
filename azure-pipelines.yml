@@ -36,9 +36,9 @@ steps:
   displayName: Build
   inputs:
     solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:PublishOutDir=$(publishDirectory)'
+    #msbuildArgs: '/p:DeployOnBuild=true /p:PublishOutDir=$(publishDirectory)'
     #msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    #msbuildArgs: /p:UseWPP_CopyWebApplication=True /p:PipelineDependsOnBuild=False /p:PublishProfile=ToFileSys.pubxml /p:DeployOnBuild=true /p:AutoParameterizationWebConfigConnectionStrings=False /p:PublishOutDir=$(publishDirectory) /p:MarkWebConfigAssistFilesAsExclude=false /p:TransformWebConfigEnabled=false
+    msbuildArgs: /p:UseWPP_CopyWebApplication=True /p:PipelineDependsOnBuild=False /p:PublishProfile=ToFileSys.pubxml /p:DeployOnBuild=true /p:AutoParameterizationWebConfigConnectionStrings=False /p:PublishOutDir=$(publishDirectory) /p:MarkWebConfigAssistFilesAsExclude=false /p:TransformWebConfigEnabled=false
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
@@ -74,7 +74,7 @@ steps:
     artifactName: 'zip'
     publishLocation: 'Container'
     
-# 7. Publish the TriggerDeploy.ps1 file
+# 8. Publish the TriggerDeploy.ps1 file
 - task: PublishBuildArtifacts@1
   displayName: Published deploy trigger script
   inputs:
