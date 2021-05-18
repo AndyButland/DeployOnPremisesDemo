@@ -46,29 +46,29 @@ steps:
 
 # 5. Include /data/* directory as part of the build output
 - task: CopyFiles@2
-    inputs:
-      sourceFolder: $(schemaDataDirectory)
-      targetFolder: '$(publishDirectory)'
+  inputs:
+    sourceFolder: $(schemaDataDirectory)
+    targetFolder: '$(publishDirectory)'
 
 # 6. Zip the build output
 - task: ArchiveFiles@2
-    inputs:
-      rootFolderOrFile: '$(publishDir)'
-      includeRootFolder: false
-      archiveType: 'zip'
-      archiveFile: '$(zipDirectory)/$(Build.BuildId).zip'
-      replaceExistingArchive: true
+  inputs:
+    rootFolderOrFile: '$(publishDir)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(zipDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
 
 # 7. Publish the zipped build output as an artifact
 - task: PublishBuildArtifacts@1
-    inputs:
-    PathtoPublish: '$(zipDirectory)'
-    ArtifactName: 'zip'
+  inputs:
+    pathtoPublish: '$(zipDirectory)'
+    artifactName: 'zip'
     publishLocation: 'Container'
     
 # 7. Publish the TriggerDeploy.ps1 file
 - task: PublishBuildArtifacts@1
-    inputs:
+  inputs:
     pathtoPublish: '$(triggerDeployScript)' 
     artifactName: 'triggerDeploy' 
     publishLocation: 'Container'
