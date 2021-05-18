@@ -23,14 +23,17 @@ steps:
 
 # 1. Install NuGet
 - task: NuGetToolInstaller@1
+  displayName: NuGet install
 
 # 2. NuGet restore
 - task: NuGetCommand@2
+  displayName: NuGet restore
   inputs:
     restoreSolution: '$(solution)'
 
-# 3. Build solutions
+# 3. Build solution
 - task: VSBuild@1
+  displayName: Build
   inputs:
     solution: '$(solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
@@ -39,20 +42,23 @@ steps:
 
 # 4. Run tests
 - task: VSTest@2
+  displayName: Run tests
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
 # 5. Include /data/* directory as part of the build output
 - task: CopyFiles@2
+  displayName: Copy files
   inputs:
     sourceFolder: $(schemaDataDirectory)
     targetFolder: '$(publishDirectory)'
 
 # 6. Zip the build output
 - task: ArchiveFiles@2
+  displayName: Zip output
   inputs:
-    rootFolderOrFile: '$(publishDir)'
+    rootFolderOrFile: '$(publishDirectory)'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(zipDirectory)/$(Build.BuildId).zip'
@@ -60,6 +66,7 @@ steps:
 
 # 7. Publish the zipped build output as an artifact
 - task: PublishBuildArtifacts@1
+  displayName: Published build artifacts
   inputs:
     pathtoPublish: '$(zipDirectory)'
     artifactName: 'zip'
@@ -67,6 +74,7 @@ steps:
     
 # 7. Publish the TriggerDeploy.ps1 file
 - task: PublishBuildArtifacts@1
+  displayName: Published deploy trigger script
   inputs:
     pathtoPublish: '$(triggerDeployScript)' 
     artifactName: 'triggerDeploy' 
