@@ -13,14 +13,24 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  solutionName: 'DeployOnPremDemo'
+  projectName: 'DeployOnPremDemo'
+  schemaDataDirectory: '$(Build.SourcesDirectory)\$(solutionName)\$(projectName)\data'
+  publishDirectory: '$(Build.ArtifactStagingDirectory)\_Publish'
+  zipDirectory: '$(Build.ArtifactStagingDirectory)\_Zip'
+  triggerDeployScript: $(Build.SourcesDirectory)\$(solutionName)\$(projectName)\TriggerDeploy.ps1
 
 steps:
+
+# 1. Install NuGet
 - task: NuGetToolInstaller@1
 
+# 2. NuGet restore
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
 
+# 3. Build solutions
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
@@ -28,7 +38,37 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+# 4. Run tests
 - task: VSTest@2
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+# 5. Include /data/* directory as part of the build output
+- task: CopyFiles@2
+    inputs:
+      sourceFolder: $(schemaDataDirectory)
+      targetFolder: '$(publishDirectory)'
+
+# 6. Zip the build output
+- task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(publishDir)'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(zipDirectory)/$(Build.BuildId).zip'
+      replaceExistingArchive: true
+
+# 7. Publish the zipped build output as an artifact
+- task: PublishBuildArtifacts@1
+    inputs:
+    PathtoPublish: '$(zipDirectory)'
+    ArtifactName: 'zip'
+    publishLocation: 'Container'
+    
+# 7. Publish the TriggerDeploy.ps1 file
+- task: PublishBuildArtifacts@1
+    inputs:
+    pathtoPublish: '$(triggerDeployScript)' 
+    artifactName: 'triggerDeploy' 
+    publishLocation: 'Container'

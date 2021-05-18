@@ -107,3 +107,6 @@ _[Ss]cripts
 
 # Ignore the Models Builder models out of date flag
 **/App_Data/Models/ood.flag
+
+# Umbraco Deploy
+data/deploy*
